@@ -3,9 +3,9 @@ import Nav from './nav';
 import { Suspense } from 'react';
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'project007 - Electoral Bond Data Analysis',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, ESLint, and Prettier.'
+    'A project to make the electoral bond data, released by the Election Commission of India, more accessible and understandable to the general public.'
 };
 
 export default function RootLayout({

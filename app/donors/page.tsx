@@ -16,7 +16,7 @@ interface DonorData {
   [donor: string]: DonorSummary;
 }
 
-export default async function PartyList({
+export default async function DonorList({
   searchParams
 }: {
   searchParams: { q: string };
