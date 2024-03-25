@@ -1,6 +1,6 @@
 "use client"
-
-import { Card, Title, Text, Grid, DonutChart } from '@tremor/react';
+import React, { useState } from 'react';
+import { Card, Title, Text, Grid, DonutChart, Button } from '@tremor/react';
 import Search from '../search';
 import { DonorTable } from '../table';
 
@@ -78,6 +78,9 @@ export default function DonorList({
     expired_amount: Object.values(otherDonors).reduce((acc, { expired_amount }) => acc + expired_amount, 0),
   };
 
+  const [toShowTopDonors, setToShowTopDonors] = useState(true);
+  let dataSource = toShowTopDonors ? topDonors : sortedData;
+
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Title>Donors</Title>
@@ -95,7 +98,7 @@ export default function DonorList({
         <Card>
           <Title>Top Companies</Title>
           <DonutChart
-            data={Object.entries(topDonors).map(([name, { total_amount }]) => ({
+            data={Object.entries(dataSource).map(([name, { total_amount }]) => ({
               value: total_amount,
               name,
             }))}
@@ -106,8 +109,12 @@ export default function DonorList({
         </Card>
       </Grid>
       <Search />
+      <Button onClick={() => setToShowTopDonors(!toShowTopDonors)}>
+        {toShowTopDonors ? 'Show All Donors' : 'Show Top Donors'}
+      </Button>
       <Card className="mt-6">
-        <DonorTable donorData={sortedData} />
+        <Title>{toShowTopDonors ? 'Top Companies' : 'All Companies'}</Title>
+        <DonorTable donorData={dataSource} />
       </Card>
     </main>
   );

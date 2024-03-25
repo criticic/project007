@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, Metric, Text, Title, BarList, Grid, DonutChart } from '@tremor/react';
-
+import { Card, Metric, Text, Title, BarList, Grid, DonutChart, Button } from '@tremor/react';
+import { useState } from 'react';
 import data from '../../../data/party_summary';
 import { getPartyInfo, getPartyFullName } from '../../../data/party_list';
 // example data
@@ -58,34 +58,40 @@ export default function PartyDescriptionPage({ params }: { params: { partyName: 
 
     topDonors.push(['Others', otherDonorsTotal]);
 
+    const [toShowTopDonors, setToShowTopDonors] = useState(true);
+    let dataSource = toShowTopDonors ? topDonors : donorDonations;
+
     return (
         <main className="p-4 md:p-10 mx-auto max-w-7xl">
             <Title>{getPartyInfo(partyFullName).proper_name} {'-'} {partyCode}</Title>
             <Grid numItemsSm={1} numItemsLg={1} className="gap-6">
-            <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
-                <Card>
-                    <Title>Total Amount</Title>
-                    <Metric>{formatIndianCurrency(partySummary.total_amount + partySummary.predata_amount)}</Metric>
-                    <Title>Total Bonds Redeemed: {partySummary.total_transactions}</Title>
-                    <Text>We have no information about {partySummary.predata_bonds} bonds worth {formatIndianCurrency(partySummary.predata_amount)}</Text>
-                </Card>
-                <Card>
-                    <Title>Top Donors</Title>
-                    <DonutChart
-                        data={topDonors.map(([name, value]) => ({
-                            value,
-                            name,
-                        }))}
-                        valueFormatter={(number: number) =>
-                            formatIndianCurrency(number)
-                        }
-                    />
-                </Card>
+                <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+                    <Card>
+                        <Title>Total Amount</Title>
+                        <Metric>{formatIndianCurrency(partySummary.total_amount + partySummary.predata_amount)}</Metric>
+                        <Title>Total Bonds Redeemed: {partySummary.total_transactions}</Title>
+                        <Text>We have no information about {partySummary.predata_bonds} bonds worth {formatIndianCurrency(partySummary.predata_amount)}</Text>
+                    </Card>
+                    <Card>
+                        <Title>{toShowTopDonors ? 'Top Donors' : 'All Donors'}</Title>
+                        <DonutChart
+                            data={dataSource.map(([name, value]) => ({
+                                value,
+                                name,
+                            }))}
+                            valueFormatter={(number: number) =>
+                                formatIndianCurrency(number)
+                            }
+                        />
+                    </Card>
                 </Grid>
+                <Button onClick={() => setToShowTopDonors(!toShowTopDonors)}>
+                    {toShowTopDonors ? 'Show All Donors' : 'Show Top Donors'}
+                </Button>
                 <Card>
-                    <Title>Top Donors (Amount {'>'} 1% of total amount)</Title>
+                    <Title>{toShowTopDonors ? 'Top Donors' : 'All Donors'}</Title>
                     <BarList
-                        data={topDonors.map(([name, value]) => ({
+                        data={dataSource.map(([name, value]) => ({
                             value,
                             name,
                         }))}
