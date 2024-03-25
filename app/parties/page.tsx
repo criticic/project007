@@ -1,8 +1,11 @@
-import { Card, Title, Text } from '@tremor/react';
+"use client";
+
+import { Card, Title, Text, Grid, DonutChart } from '@tremor/react';
 import Search from '../search';
 import { PartyTable } from '../table';
 
 import data from '../../data/party_summary';
+import { getPartyInfo } from '../../data/party_list';
 
 // example data
 // const data: PartyData = {
@@ -27,7 +30,23 @@ interface PartyData {
   [party: string]: PartySummary;
 }
 
-export default async function PartyList({
+function formatIndianCurrency(num: number) {
+  const crore = 10000000;
+  const lakh = 100000;
+  const thousand = 1000;
+
+  if (num >= crore) {
+      return `${num / crore} Crore`;
+  } else if (num >= lakh) {
+      return `${num / lakh} Lakh`;
+  } else if (num >= thousand) {
+      return `${num / thousand} Thousand`;
+  } else {
+      return num.toString();
+  }
+}
+
+export default function PartyList({
   searchParams
 }: {
   searchParams: { q: string };
@@ -57,6 +76,26 @@ export default async function PartyList({
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Title>Parties</Title>
       <Text>List of Political Parties which recieved funding through Electoral Bonds</Text>
+      <Grid numItemsSm={1} numItemsLg={2} className="gap-6">
+        <Card>
+          <Title>Summary</Title>
+          <Title>Total Parties: {Object.keys(data).length}</Title>
+          <Title>Total Amount Received: {formatIndianCurrency(Object.values(data).reduce((acc, party) => acc + party.total_amount + party.predata_amount, 0))}</Title>
+          <Title>Total Bonds Redeemed: {Object.values(data).reduce((acc, party) => acc + party.total_transactions + party.predata_bonds, 0)}</Title>
+          <Text>We have no information about {Object.values(data).reduce((acc, party) => acc + party.predata_bonds, 0)} bonds worth {formatIndianCurrency(Object.values(data).reduce((acc, party) => acc + party.predata_amount, 0))}</Text>
+        </Card>
+        <Card>
+          <Title>Top Parties</Title>
+          <DonutChart
+            data={Object.entries(sortedData).map(([name, party]) => ({
+              value: party.total_amount + party.predata_amount,
+              name: getPartyInfo(name).proper_name,
+            }))}
+            valueFormatter={(number: number) =>
+              formatIndianCurrency(number)
+            } />
+        </Card>
+      </Grid>
       <Search />
       <Card className="mt-6">
         <PartyTable partyData={sortedData} />
