@@ -140,11 +140,13 @@ export function getPartyInfo(party: string) {
 
 export function getPartyFullName(short_name: string) {
     const party = party_info[0];
+    let partyFullName: string = '';
     for (const [key, value] of Object.entries(party)) {
         if (value.short_name === short_name) {
-            return key;
+            partyFullName = key;
         }
     }
+    return partyFullName;
 }
 
 export default data;
