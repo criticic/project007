@@ -94,6 +94,7 @@ export default function PartyDescriptionPage({ params }: { params: { partyName: 
                         data={dataSource.map(([name, value]) => ({
                             value,
                             name,
+                            href: `/donors/${encodeURIComponent(name)}`,
                         }))}
                         valueFormatter={(number: number) =>
                             formatIndianCurrency(number)

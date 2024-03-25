@@ -74,11 +74,12 @@ export default function DonorDescriptionPage({ params }: { params: { donorName: 
                 </Card>
                 </Grid>
                 <Card>
-                    <Title>Top Parties (Amount {'>'} 1% of total amount)</Title>
+                    <Title>Top Parties</Title>
                     <BarList
                         data={topParties.map(([name, value]) => ({
                             value,
                             name: getPartyInfo(name).proper_name,
+                            href: `/parties/${getPartyInfo(name).short_name}`,
                         }))}
                         valueFormatter={(number: number) =>
                             formatIndianCurrency(number)
