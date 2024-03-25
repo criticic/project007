@@ -36,7 +36,6 @@ function formatIndianCurrency(num: number) {
 
 export default function DonorDescriptionPage({ params }: { params: { donorName: string } }) {
         const donorName = decodeURIComponent(params.donorName);
-        console.log(donorName);
         const donorSummary: DonorSummary = data[donorName];
     
         // sort party donations
