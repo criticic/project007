@@ -96,7 +96,7 @@ export default function DonorList({
           <Text>Expired Bonds are donated to the PM Relief Fund</Text>
         </Card>
         <Card>
-          <Title>Top Companies</Title>
+          <Title>{toShowTopDonors ? 'Top Donors' : 'All Donors'}</Title>
           <DonutChart
             data={Object.entries(dataSource).map(([name, { total_amount }]) => ({
               value: total_amount,
@@ -113,7 +113,7 @@ export default function DonorList({
         {toShowTopDonors ? 'Show All Donors' : 'Show Top Donors'}
       </Button>
       <Card className="mt-6">
-        <Title>{toShowTopDonors ? 'Top Companies' : 'All Companies'}</Title>
+        <Title>{toShowTopDonors ? 'Top Donors' : 'All Donors'}</Title>
         <DonorTable donorData={dataSource} />
       </Card>
     </main>
